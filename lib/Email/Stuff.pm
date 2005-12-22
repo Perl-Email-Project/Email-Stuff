@@ -198,7 +198,7 @@ sub new {
 
 	my $self = bless {
 		send_using => [ 'Sendmail' ],
-		mailer     => undef,
+		# mailer   => undef,
 		parts      => [],
 		email      => Email::MIME->create(
 			header => [],
@@ -487,10 +487,13 @@ time that we send the mail.
 
 sub using {
 	my $self = shift;
-	$self->{send_using} = [ @_ ] if @_;
 
-	# Create the mailer so the driver is initialised
-	$self->mailer;
+	if ( @_ ) {
+		# Change the mailer
+		$self->{send_using} = [ @_ ];
+		delete $self->{mailer};
+		$self->mailer;
+	}
 
 	$self;
 }
