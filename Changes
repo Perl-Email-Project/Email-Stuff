@@ -1,0 +1,36 @@
+Revision history for Perl extension Email::Stuff
+
+2.00  Fri Dec 23 2005
+	- Things to handle the big incompatible Email::Send changes
+	- Synced version number to Email::Send for clarity
+
+0.08  Fri Oct 14 2005
+	- Refactoring based on advice from Jesse Vincent
+	- Moved all the cased method names to lower case
+	  (left cased aliases for legacy code).
+	- Added additional "Why not just use Email::MIME" doc section
+
+0.07  Fri Oct 14 2005
+	- Adding more unit tests
+	- Added dependency on Email::Send::Test
+	- POD cleanup
+	- Renamed ->Email to ->email
+	- Added dependency on Email::Simple::Headers
+
+0.06  Sun Nov  6 2004
+	- Adding prefork pragma for File::Type and File::Slurp
+
+0.05  Sun Oct  2 2004
+	- Added support for coercion to an Email::MIME object
+
+0.04  Sun Sep 26 2004
+	- First working version, although not thoroughly tested.
+
+0.03  Fri Sep 24 2004
+	- Bigger chunk of the work completed
+
+0.02  Sun Sep 19 2004
+	- Renamed from Email::Assemble to Email::Stuff
+
+0.01  Tue Sep 14 2004
+	- Created the initial implementation
