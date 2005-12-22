@@ -13,6 +13,6 @@ requires       'File::Type'             => '0.22';
 requires       'File::Slurp'            => '9999.04';
 build_requires 'Test::More'             => '0.47';
 build_requires 'File::Spec'             => '0.80';
-build_requires 'Email::Send::Test'      => '0.02';
+build_requires 'Email::Send::Test'      => '2.00';
 auto_install;
 WriteAll;

@@ -19,19 +19,24 @@ BEGIN {
 
 
 # Does everything load?
-use Test::More 'tests' => 1;
+use Test::More tests => 2;
 use Email::Stuff;
+
+my $TEST_GIF = $ENV{HARNESS_ACTIVE}
+	? catfile( 't', 'data', 'paypal.gif' )
+	: catfile( 'data', 'paypal.gif' );
+ok( -f $TEST_GIF, 'Found test image' );
 
 # Specify the location of sendmail
 use Email::Send::Sendmail;
 $Email::Send::Sendmail::SENDMAIL = '/usr/sbin/sendmail';
 
-my $rv = Email::Stuff->from       ( 'Adam Kennedy<adam@phase-n.com>')
-                     ->to         ( 'adam@phase-n.com'              )
-                     ->subject    ( 'Hello To:!'                    )
-                     ->text_body  ( 'I am an email'                 )
-                     ->attach_file( catfile('t.data', 'paypal.gif') )
-                     ->send       ( @ARGV                           );
+my $rv = Email::Stuff->from       ( 'Adam Kennedy <adam@phase-n.com>' )
+                     ->to         ( 'adam@phase-n.com'                )
+                     ->subject    ( 'Hello To:!'                      )
+                     ->text_body  ( 'I am an email'                   )
+                     ->attach_file( $TEST_GIF                         )
+                     ->send       ( @ARGV                             );
 ok( $rv, 'Email sent ok' );
 
 1;

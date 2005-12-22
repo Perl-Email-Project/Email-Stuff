@@ -490,14 +490,7 @@ sub using {
 	$self->{send_using} = [ @_ ] if @_;
 
 	# Create the mailer so the driver is initialised
-	my $driver = $self->_driver;
-	$self->{mailer} = Email::Send->new( {
-		mailer      => $driver,
-		mailer_args => [ $self->_options ],
-		} );
-	unless ( $self->{mailer}->mailer_available ) {
-		Carp::croak("Driver $driver is not available");
-	}
+	$self->mailer;
 
 	$self;
 }
@@ -552,18 +545,47 @@ sub send {
 	my $self = shift;
 	$self->using(@_) if @_; # Arguments are passed to ->using
 	my $email = $self->email or return undef;
-	Email::Send::send( $self->_driver, $email, $self->_options );
+	$self->mailer->send( $email );
 }
 
 sub _driver {
 	my $self = shift;
-	$self->{send_using}->[0];	
+	$self->{send_using}->[0];
 }
 
 sub _options {
 	my $self = shift;
 	my $options = $#{$self->{send_using}};
 	@{$self->{send_using}}[1 .. $options];
+}
+
+=pod
+
+=head2 mailer
+
+If you need to interact with it directly, the C<mailer> method
+returns the L<Email::Send> mailer object that will be used to
+send the email.
+
+Returns an L<Email::Send> object, or dies if the driver is not
+available.
+
+=cut
+
+sub mailer { 
+	my $self = shift;
+	return $self->{mailer} if $self->{mailer};
+
+	my $driver = $self->_driver;
+	$self->{mailer} = Email::Send->new( {
+		mailer      => $driver,
+		mailer_args => [ $self->_options ],
+		} );
+	unless ( $self->{mailer}->mailer_available($driver, $self->_options) ) {
+		Carp::croak("Driver $driver is not available");
+	}
+
+	$self->{mailer};
 }
 
 

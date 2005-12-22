@@ -14,8 +14,13 @@ BEGIN {
 	}
 }
 
-use Test::More tests => 27;
+use Test::More tests => 28;
 use Email::Stuff;
+
+my $TEST_GIF = $ENV{HARNESS_ACTIVE}
+	? catfile( 't', 'data', 'paypal.gif' )
+	: catfile( 'data', 'paypal.gif' );
+ok( -f $TEST_GIF, 'Found test image' );
 
 sub string_ok {
 	my $string = shift;
@@ -60,19 +65,19 @@ is( $Stuff->email->header('From'), 'bob@ali.as', '->From sets From header' );
 # More complex one
 use Email::Send::Test ();
 my $rv2 = Email::Stuff->from       ( 'Adam Kennedy<adam@phase-n.com>')
-                     ->to         ( 'adam@phase-n.com'              )
-                     ->subject    ( 'Hello To:!'                    )
-                     ->text_body  ( 'I am an email'                 )
-                     ->attach_file( catfile('t.data', 'paypal.gif') )
-                     ->using      ( 'Test'                          )
-                     ->send;
+                      ->to         ( 'adam@phase-n.com'              )
+                      ->subject    ( 'Hello To:!'                    )
+                      ->text_body  ( 'I am an email'                 )
+                      ->attach_file( $TEST_GIF                       )
+                      ->using      ( 'Test'                          )
+                      ->send;
 ok( $rv2, 'Email sent ok' );
 is( scalar(Email::Send::Test->emails), 1, 'Sent one email' );
 my $email = (Email::Send::Test->emails)[0]->as_string;
-like( $email, qr/Adam Kennedy/, 'Email contains from name' );
-like( $email, qr/phase-n/, 'Email contains to string' );
-like( $email, qr/Hello/, 'Email contains subject string' );
+like( $email, qr/Adam Kennedy/,  'Email contains from name' );
+like( $email, qr/phase-n/,       'Email contains to string' );
+like( $email, qr/Hello/,         'Email contains subject string' );
 like( $email, qr/I am an email/, 'Email contains text_body' );
-like( $email, qr/paypal/, 'Email contains file name' );
+like( $email, qr/paypal/,        'Email contains file name' );
 
 1;
