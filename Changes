@@ -1,5 +1,10 @@
 Revision history for Perl extension Email::Stuff
 
+2.02  Sun Jan 29 2006
+	- Updated to ensure that Email::Send is correctly updated
+
+2.01  skipped
+
 2.00  Fri Dec 23 2005
 	- Things to handle the big incompatible Email::Send changes
 	- Synced version number to Email::Send for clarity
