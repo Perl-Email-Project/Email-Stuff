@@ -1,5 +1,9 @@
 Revision history for Perl extension Email::Stuff
 
+2.03  Thu 13 Jul 2006
+	- Incremental release in preparation for handover to RJBS
+	- Updated to Module::Install 0.63
+
 2.02  Sun Jan 29 2006
 	- Updated to ensure that Email::Send is correctly updated
 	- Updated to Module::Install 0.55

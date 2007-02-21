@@ -175,7 +175,7 @@ use prefork 'File::Slurp';
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '2.02';
+	$VERSION = '2.03';
 }
 
 
