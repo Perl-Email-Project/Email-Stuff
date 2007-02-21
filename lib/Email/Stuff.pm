@@ -166,16 +166,16 @@ use strict;
 use Carp                   ();
 use Clone                  ();
 use File::Basename         ();
+use Params::Util           '_INSTANCE';
 use Email::MIME            ();
 use Email::MIME::Creator   ();
-use Email::Simple::Headers ();
 use Email::Send            ();
 use prefork 'File::Type';
 use prefork 'File::Slurp';
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '2.03';
+	$VERSION = '2.04';
 }
 
 
@@ -310,8 +310,7 @@ Adds a Bcc: header to the email
 
 sub bcc {
 	my $self = shift()->_self;
-	$self->{email}->header_set(bcc => shift)
-		? $self : undef;
+	$self->{email}->header_set(bcc => shift) ? $self : undef;
 }
 
 =pod
@@ -453,7 +452,7 @@ sub attach_file {
 	my $body = undef;
 
 	# Support IO::All::File arguments
-	if ( UNIVERSAL::isa(ref $_[0], 'IO::All::File') ) {
+	if ( Params::Util::_INSTANCE($_[0], 'IO::All::File') ) {
 		$name = $_[0]->name;
 		$body = $_[0]->all;
 
@@ -627,11 +626,15 @@ For other issues, or commercial enhancement or support, contact the author.
 
 =head1 AUTHORS
 
-Adam Kennedy E<lt>cpan@ali.asE<gt>, L<http://ali.as/>
+Adam Kennedy E<lt>adamk@cpan.orgE<gt>
+
+=head1 SEE ALSO
+
+L<Email::MIME>, L<Email::Send>, L<http://ali.as/>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2004 - 2005 Adam Kennedy. All rights reserved.
+Copyright 2004 - 2007 Adam Kennedy.
 
 This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.

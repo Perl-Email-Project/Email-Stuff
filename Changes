@@ -1,5 +1,11 @@
 Revision history for Perl extension Email::Stuff
 
+2.04  Wed 21 Feb 2007
+	- Updated to Module::Install 0.64
+	- Updating various dependencies
+	- Using Params::Util to check for IO::All::File
+	- Removing the use of deprecated Email::Headers
+
 2.03  Thu 13 Jul 2006
 	- Incremental release in preparation for handover to RJBS
 	- Updated to Module::Install 0.63
