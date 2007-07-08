@@ -1,5 +1,9 @@
 Revision history for Perl extension Email::Stuff
 
+2.05  Mon  9 Jul 2007
+	- Updated to Module::Install 0.65
+	- Adding support for ->using(mailer)
+
 2.04  Wed 21 Feb 2007
 	- Updated to Module::Install 0.64
 	- Updating various dependencies

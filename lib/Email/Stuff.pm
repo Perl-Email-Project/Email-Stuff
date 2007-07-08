@@ -175,7 +175,7 @@ use prefork 'File::Slurp';
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '2.04';
+	$VERSION = '2.05';
 }
 
 
@@ -476,11 +476,14 @@ sub attach_file {
 
 =pod
 
-=head2 using $Driver, @options
+=head2 using $drivername, @options
 
 The C<using> method specifies the L<Email::Send> driver that you want to use to
 send the email, and any options that need to be passed to the driver at the
 time that we send the mail.
+
+Alternatively, you can pass a complete mailer object (which must be an
+L<Email::Send> object) and it will be used as is.
 
 =cut
 
@@ -489,9 +492,14 @@ sub using {
 
 	if ( @_ ) {
 		# Change the mailer
-		$self->{send_using} = [ @_ ];
-		delete $self->{mailer};
-		$self->mailer;
+		if ( _INSTANCE($_[0], 'Email::Send') ) {
+			$self->{mailer} = shift;
+			delete $self->{send_using};
+		} else {
+			$self->{send_using} = [ @_ ];
+			delete $self->{mailer};
+			$self->mailer;
+		}
 	}
 
 	$self;
