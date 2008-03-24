@@ -13,7 +13,6 @@ requires       'Email::MIME'            => '1.858';
 requires       'Email::MIME::Creator'   => '1.451';
 requires       'Email::Send'            => '2.185';
 requires       'File::Type'             => '0.22';
-requires       'File::Slurp'            => '9999.12';
 build_requires 'Test::More'             => '0.47';
 build_requires 'File::Spec'             => '0.80';
 build_requires 'Email::Send::Test'      => '2.04';

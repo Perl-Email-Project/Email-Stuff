@@ -171,7 +171,6 @@ use Email::MIME            ();
 use Email::MIME::Creator   ();
 use Email::Send            ();
 use prefork 'File::Type';
-use prefork 'File::Slurp';
 
 use vars qw{$VERSION};
 BEGIN {
@@ -458,9 +457,8 @@ sub attach_file {
 
 	# Support file names
 	} elsif ( defined $_[0] and -f $_[0] ) {
-		require File::Slurp;
 		$name = $_[0];
-		$body = File::Slurp::read_file( $_[0] );
+		$body = _slurp( $_[0] ) or return undef;
 
 	# That's it
 	} else {
@@ -472,6 +470,17 @@ sub attach_file {
 
 	# Now attach as normal
 	$self->attach( $body, name => $name, filename => $name );
+}
+
+# Provide a simple _slurp implementation
+sub _slurp {
+	my $file = shift;
+	local $/ = undef;
+	local *SLURP;
+	open( SLURP, "<$file" ) or return undef;
+	my $source = <SLURP>;
+	close( SLURP ) or return undef;
+	\$source;
 }
 
 =pod
