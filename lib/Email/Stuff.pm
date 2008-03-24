@@ -174,7 +174,7 @@ use prefork 'File::Type';
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '2.06';
+	$VERSION = '2.05';
 }
 
 
@@ -651,7 +651,7 @@ L<Email::MIME>, L<Email::Send>, L<http://ali.as/>
 
 =head1 COPYRIGHT
 
-Copyright 2004 - 2007 Adam Kennedy.
+Copyright 2004 - 2008 Adam Kennedy.
 
 This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.
