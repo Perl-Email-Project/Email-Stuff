@@ -164,7 +164,6 @@ B<are not> chainable.
 use 5.005;
 use strict;
 use Carp                   ();
-use Clone                  ();
 use File::Basename         ();
 use Params::Util           '_INSTANCE';
 use Email::MIME            ();
@@ -215,14 +214,19 @@ sub _self {
 
 =pod
 
-=head2 headers
+=head2 header_names
 
 Returns, as a list, all of the headers currently set for the Email
+For backwards compatibility, this method can also be called as B[headers].
 
 =cut
 
+sub header_names {
+	shift()->{email}->header_names;
+}
+
 sub headers {
-	shift()->{email}->headers;
+	shift()->{email}->header_names; ## This is now header_names, headers is depreciated
 }
 
 =pod
@@ -532,12 +536,56 @@ Creates and returns the full L<Email::MIME> object for the email.
 sub email {
 	my $self  = shift;
 	my @parts = $self->parts;
-	$self->{email}->parts_set( \@parts ) if @parts;
+
+        ### Lyle Hopkins, code added to Fix single part, and multipart/alternative problems
+        if ( scalar( @{ $self->{parts} } ) >= 3 ) {
+                ## multipart/mixed
+                $self->{email}->parts_set( \@parts );
+        }
+        ## Check we actually have any parts
+        elsif ( scalar( @{ $self->{parts} } ) ) {
+                if ( _INSTANCE($parts[0], 'Email::MIME') && _INSTANCE($parts[1], 'Email::MIME') ) {
+                        ## multipart/alternate
+                        $self->{email}->header_set( 'Content-Type' => 'multipart/alternative' );
+                        $self->{email}->parts_set( \@parts );
+                }
+                ## As @parts is $self->parts without the blanks, we only need check $parts[0]
+                elsif ( _INSTANCE($parts[0], 'Email::MIME') ) {
+                        ## single part text/plain
+                        _transfer_headers( $self->{email}, $parts[0] );
+                        $self->{email} = $parts[0];
+                }
+        }
+
 	$self->{email};
 }
 
 # Support coercion to an Email::MIME
 sub __as_Email_MIME { shift()->email }
+
+# Quick any routine
+sub _any (&@) {
+        my $f = shift;
+        return if ! @_;
+        for (@_) {
+                return 1 if $f->();
+        }
+        return 0;
+}
+
+# header transfer from one object to another
+sub _transfer_headers {
+        # $_[0] = from, $_[1] = to
+        my @headers_move = $_[0]->header_names;
+        my @headers_skip = $_[1]->header_names;
+print "HM: @headers_move\n";
+print "HS: @headers_skip\n";
+        foreach my $header_name (@headers_move) {
+                next if _any { $_ eq $header_name } @headers_skip;
+                my @values = $_[0]->header($header_name);
+                $_[1]->header_set( $header_name, @values );
+        }
+}
 
 =pod
 
