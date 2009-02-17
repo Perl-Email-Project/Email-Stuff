@@ -5,7 +5,6 @@ all_from       'lib/Email/Stuff.pm';
 requires       'Carp'                   => 0;
 requires       'File::Basename'         => 0;
 requires       'prefork'                => '1.01';
-requires       'Clone'                  => '0.21';
 requires       'Params::Util'           => '0.23';
 requires       'Email::Simple'          => '1.998';
 requires       'Email::MIME'            => '1.858';
