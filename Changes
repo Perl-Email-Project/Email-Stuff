@@ -1,5 +1,9 @@
 Revision history for Perl extension Email::Stuff
 
+2.07  Fri 17 Feb 2009
+	- Fixed bug http://rt.cpan.org/Public/Bug/Display.html?id=27320
+	  Removed unused Clone dependency
+
 2.06  Fri 28 Dec 2007
 	- Removed unreliable File::Slurp dependency
 
