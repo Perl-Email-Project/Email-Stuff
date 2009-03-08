@@ -578,8 +578,6 @@ sub _transfer_headers {
         # $_[0] = from, $_[1] = to
         my @headers_move = $_[0]->header_names;
         my @headers_skip = $_[1]->header_names;
-print "HM: @headers_move\n";
-print "HS: @headers_skip\n";
         foreach my $header_name (@headers_move) {
                 next if _any { $_ eq $header_name } @headers_skip;
                 my @values = $_[0]->header($header_name);
