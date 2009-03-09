@@ -1,7 +1,5 @@
 package Email::Stuff;
 
-=pod
-
 =head1 NAME
 
 Email::Stuff - A more casual approach to creating and sending Email:: emails
@@ -176,14 +174,8 @@ BEGIN {
 	$VERSION = '2.08';
 }
 
-
-
-
-
 #####################################################################
 # Constructor and Accessors
-
-=pod
 
 =head2 new
 
@@ -212,8 +204,6 @@ sub _self {
 	ref($either) ? $either : $either->new;
 }
 
-=pod
-
 =head2 header_names
 
 Returns, as a list, all of the headers currently set for the Email
@@ -228,8 +218,6 @@ sub header_names {
 sub headers {
 	shift()->{email}->header_names; ## This is now header_names, headers is depreciated
 }
-
-=pod
 
 =head2 parts
 
@@ -248,8 +236,6 @@ sub parts {
 #####################################################################
 # Header Methods
 
-=pod
-
 =head2 header $header => $value
 
 Adds a single named header to the email. Note I said B<add> not set,
@@ -264,8 +250,6 @@ sub header {
 	$self->{email}->header_set(shift, shift) ? $self : undef;
 }
 
-=pod
-
 =head2 to $address
 
 Adds a To: header to the email
@@ -276,8 +260,6 @@ sub to {
 	my $self = shift()->_self;
 	$self->{email}->header_set(to => shift) ? $self : undef;
 }
-
-=pod
 
 =head2 from $address
 
@@ -290,8 +272,6 @@ sub from {
 	$self->{email}->header_set(from => shift) ? $self : undef;
 }
 
-=pod
-
 =head2 cc $address
 
 Adds a Cc: header to the email
@@ -302,8 +282,6 @@ sub cc {
 	my $self = shift()->_self;
 	$self->{email}->header_set(cc => shift) ? $self : undef;
 }
-
-=pod
 
 =head2 bcc $address
 
@@ -316,8 +294,6 @@ sub bcc {
 	$self->{email}->header_set(bcc => shift) ? $self : undef;
 }
 
-=pod
-
 =head2 subject $text
 
 Adds a subject to the email
@@ -329,14 +305,8 @@ sub subject {
 	$self->{email}->header_set(subject => shift) ? $self : undef;
 }
 
-
-
-
-
 #####################################################################
 # Body and Attachments
-
-=pod
 
 =head2 text_body $body [, $header => $value, ... ]
 
@@ -367,8 +337,6 @@ sub text_body {
 	$self;
 }
 
-=pod
-
 =head2 html_body $body [, $header => $value, ... ]
 
 Set the HTML body of the email. Unless specified, all the appropriate
@@ -396,8 +364,6 @@ sub html_body {
 
 	$self;
 }
-
-=pod
 
 =head2 attach $contents [, $header => $value, ... ]
 
@@ -438,8 +404,6 @@ sub attach {
 
 	$self;
 }
-
-=pod
 
 =head2 attach_file $file
 
@@ -487,8 +451,6 @@ sub _slurp {
 	\$source;
 }
 
-=pod
-
 =head2 using $drivername, @options
 
 The C<using> method specifies the L<Email::Send> driver that you want to use to
@@ -524,8 +486,6 @@ sub using {
 
 #####################################################################
 # Output Methods
-
-=pod
 
 =head2 email
 
@@ -585,8 +545,6 @@ sub _transfer_headers {
         }
 }
 
-=pod
-
 =head2 as_string
 
 Returns the string form of the email. Identical to (and uses behind the
@@ -597,8 +555,6 @@ scenes) Email::MIME-E<gt>as_string.
 sub as_string {
 	shift()->email->as_string;
 }
-
-=pod
 
 =head2 send
 
@@ -623,8 +579,6 @@ sub _options {
 	my $options = $#{$self->{send_using}};
 	@{$self->{send_using}}[1 .. $options];
 }
-
-=pod
 
 =head2 mailer
 
@@ -669,15 +623,17 @@ sub Email   { shift->email(@_)   }
 
 1;
 
-=pod
-
 =head1 TO DO
 
-- Fix a number of bugs still likely to exist
+=over 4
 
-- Write some proper unit tests. Write ANY unit tests
+=item * Fix a number of bugs still likely to exist
 
-- Add any additional small bit of automation that arn't too expensive
+=item * Write more tests.
+
+=item * Add any additional small bit of automation that arn't too expensive
+
+=back
 
 =head1 SUPPORT
 
@@ -685,9 +641,9 @@ All bugs should be filed via the CPAN bug tracker at
 
 L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Email-Stuff>
 
-For other issues, or commercial enhancement or support, contact the author.
-
 =head1 AUTHORS
+
+B<Current maintainer>: Ricardo Signes C<rjbs@cpan.org>
 
 Adam Kennedy E<lt>adamk@cpan.orgE<gt>
 
