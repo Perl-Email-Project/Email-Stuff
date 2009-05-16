@@ -135,7 +135,7 @@ Email::Stuff's brevity to your advantage.
                  # Of course, we could have pulled these from
                  # $MyConfig->{support_tech} or something similar.
                  ->to('0416181595@sms.gateway')
-                 ->using(SMTP => '123.123.123.123');
+                 ->using('SMTP', Host => '123.123.123.123');
   }
 
   package My::Code;
