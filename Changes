@@ -1,5 +1,8 @@
 Revision history for Perl extension Email::Stuff
 
+2.09  Sat 16 May 2009
+	- documentation tweaks for SMTP hostname; thanks Kieren Kiment
+
 2.08  Sun 08 March 2009
 	- Removed debugging prints accidentally left in from last update
 
