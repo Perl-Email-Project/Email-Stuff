@@ -405,28 +405,29 @@ sub attach {
 	$self;
 }
 
-=head2 attach_file $file
+=head2 attach_file $file [, $header => $value, ... ]
 
-Provides a one-argument method to attach a file that already exists
-on the filesystem to the email. C<attach_file> will auto-detect the
-MIME type, and use the file's current name when attaching.
+Attachs a file that already exists on the filesystem to the email. 
+C<attach_file> will auto-detect the MIME type, and use the file's
+current name when attaching.
 
 =cut
 
 sub attach_file {
 	my $self = shift;
+  my $body_arg = shift;
 	my $name = undef;
 	my $body = undef;
 
 	# Support IO::All::File arguments
-	if ( Params::Util::_INSTANCE($_[0], 'IO::All::File') ) {
-		$name = $_[0]->name;
-		$body = $_[0]->all;
+	if ( Params::Util::_INSTANCE($body_arg, 'IO::All::File') ) {
+		$name = $body_arg->name;
+		$body = $body_arg->all;
 
 	# Support file names
-	} elsif ( defined $_[0] and -f $_[0] ) {
-		$name = $_[0];
-		$body = _slurp( $_[0] ) or return undef;
+	} elsif ( defined $body_arg and -f $body_arg ) {
+		$name = $body_arg;
+		$body = _slurp( $body_arg ) or return undef;
 
 	# That's it
 	} else {
@@ -437,7 +438,7 @@ sub attach_file {
 	$name = File::Basename::basename($name) or return undef;
 
 	# Now attach as normal
-	$self->attach( $body, name => $name, filename => $name );
+	$self->attach( $body, name => $name, filename => $name, @_ );
 }
 
 # Provide a simple _slurp implementation
