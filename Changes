@@ -1,5 +1,9 @@
 Revision history for Perl extension Email::Stuff
 
+2.100     2009-08-11
+          Allows attach_file to accept attribute arguments ie (content_type)
+          just like attach does (twek)
+
 2.09  Sat 16 May 2009
 	- documentation tweaks for SMTP hostname; thanks Kieren Kiment
 
