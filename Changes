@@ -1,5 +1,10 @@
 Revision history for Perl extension Email::Stuff
 
+2.101     2009-11-12
+          accept character (unicode) strings for bodies and headers
+          ucfirst header names
+          (above changes by Aristotle Pagaltzis)
+
 2.100     2009-08-11
           Allows attach_file to accept attribute arguments ie (content_type)
           just like attach does (twek)
