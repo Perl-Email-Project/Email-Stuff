@@ -322,7 +322,7 @@ sub text_body {
 	my %attr = (
 		# Defaults
 		content_type => 'text/plain',
-		charset      => 'us-ascii',
+		charset      => 'utf-8',
 		encoding     => 'quoted-printable',
 		format       => 'flowed',
 		# Params overwrite them
@@ -352,7 +352,7 @@ sub html_body {
 	my %attr = (
 		# Defaults
 		content_type => 'text/html',
-		charset      => 'us-ascii',
+		charset      => 'utf-8',
 		encoding     => 'quoted-printable',
 		# Params overwrite them
 		@_,
