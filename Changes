@@ -1,5 +1,8 @@
 Revision history for Perl extension Email::Stuff
 
+2.102     2010-02-14
+          minor documentation improvements
+
 2.101     2009-11-12
           accept character (unicode) strings for bodies and headers
           ucfirst header names

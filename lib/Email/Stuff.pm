@@ -88,7 +88,6 @@ And now doing it directly with a knowledge of what your attachment is, and
 what the correct MIME structure is.
 
   use Email::MIME;
-  use Email::MIME::Creator;
   use Email::Send;
   use IO::All;
   
@@ -128,6 +127,7 @@ Email::Stuff's brevity to your advantage.
 =head2 Custom Alerts
 
   package SMS::Alert;
+  use base 'Email::Stuff';
   
   sub new {
           shift()->SUPER::new(@_)
