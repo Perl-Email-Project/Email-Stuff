@@ -311,14 +311,16 @@ sub subject {
 =head2 text_body $body [, $header => $value, ... ]
 
 Sets the text body of the email. Unless specified, all the appropriate
-headers are set for you. You may overload any as needed. See
-L<Email::MIME::Creator> for the actual headers to use.
+headers are set for you. You may override any as needed. See
+L<Email::MIME> for the actual headers to use.
+
+If C<$body> is undefined, this method will do nothing.
 
 =cut
 
 sub text_body {
 	my $self = shift()->_self;
-	my $body = defined $_[0] ? shift : return undef;
+	my $body = defined $_[0] ? shift : return $self;
 	my %attr = (
 		# Defaults
 		content_type => 'text/plain',
@@ -341,14 +343,16 @@ sub text_body {
 =head2 html_body $body [, $header => $value, ... ]
 
 Set the HTML body of the email. Unless specified, all the appropriate
-headers are set for you. You may overload any as needed. See
-L<Email::MIME::Creator> for the actual headers to use.
+headers are set for you. You may override any as needed. See
+L<Email::MIME> for the actual headers to use.
+
+If C<$body> is undefined, this method will do nothing.
 
 =cut
 
 sub html_body {
 	my $self = shift()->_self;
-	my $body = defined $_[0] ? shift : return undef;
+	my $body = defined $_[0] ? shift : return $self;
 	my %attr = (
 		# Defaults
 		content_type => 'text/html',
