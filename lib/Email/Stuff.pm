@@ -505,9 +505,18 @@ sub email {
 	my @parts = $self->parts;
 
         ### Lyle Hopkins, code added to Fix single part, and multipart/alternative problems
+        # fixed multi attachment mixed/alternative MIME nesting -- mattp@cpan
         if ( scalar( @{ $self->{parts} } ) >= 3 ) {
-                ## multipart/mixed
-                $self->{email}->parts_set( \@parts );
+                # $self->{email} is multipart/mixed, let the text/html body
+                # be in a nested multipart/alternative MIME object.
+                my $mp_alt = Email::MIME->create(
+                    header => ['Content-Type' => 'multipart/alternative' ],
+                    parts  => [ $parts[0], $parts[1] ],
+                );
+
+                # take all other attachments and append them to the mp/alt MIME above
+                $self->{email}->parts_set( [ $mp_alt, @parts[2..$#parts] ] );
+
         }
         ## Check we actually have any parts
         elsif ( scalar( @{ $self->{parts} } ) ) {
