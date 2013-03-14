@@ -8,10 +8,10 @@ requires       'prefork'                => '1.01';
 requires       'Params::Util'           => '0.23';
 requires       'Email::Simple'          => '1.998';
 requires       'Email::MIME'            => '1.901';
-requires       'Email::Send'            => '2.185';
+requires       'Email::Sender'          => '0.102370';
 requires       'File::Type'             => '0.22';
 test_requires 'Test::More'             => '0.47';
 test_requires 'File::Spec'             => '0.80';
-test_requires 'Email::Send::Test'      => '2.04';
+test_requires 'Email::Sender::Transport::Test' => '0.102370';
 
 WriteAll;

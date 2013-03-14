@@ -62,7 +62,7 @@ sendmail to send mail, if you don't provide the mail send channel with
 either the C<using> method, or as an argument to C<send>.
 
 The use of sendmail as the default mailer is consistent with the behaviour
-of the L<Email::Send> module itself.
+of the L<Email::Sender> module itself.
 
 =head2 Why use this?
 
@@ -88,7 +88,7 @@ And now doing it directly with a knowledge of what your attachment is, and
 what the correct MIME structure is.
 
   use Email::MIME;
-  use Email::Send;
+  use Email::Sender;
   use IO::All;
   
   send SMTP => Email::MIME->create(
@@ -166,7 +166,7 @@ use File::Basename         ();
 use Params::Util           '_INSTANCE';
 use Email::MIME            ();
 use Email::MIME::Creator   ();
-use Email::Send            ();
+use Email::Sender::Simple  ();
 use prefork 'File::Type';
 
 use vars qw{$VERSION};
@@ -460,12 +460,12 @@ sub _slurp {
 
 =head2 using $drivername, @options
 
-The C<using> method specifies the L<Email::Send> driver that you want to use to
+The C<using> method specifies the L<Email::Sender> driver that you want to use to
 send the email, and any options that need to be passed to the driver at the
 time that we send the mail.
 
 Alternatively, you can pass a complete mailer object (which must be an
-L<Email::Send> object) and it will be used as is.
+L<Email::Sender::Transport> object) and it will be used as is.
 
 =cut
 
@@ -474,7 +474,7 @@ sub using {
 
 	if ( @_ ) {
 		# Change the mailer
-		if ( _INSTANCE($_[0], 'Email::Send') ) {
+		if ( _INSTANCE($_[0], 'Email::Sender::Transport') ) {
 			$self->{mailer} = shift;
 			delete $self->{send_using};
 		} else {
@@ -565,24 +565,24 @@ sub as_string {
 
 =head2 send
 
-Sends the email via L<Email::Send>.
+Sends the email via L<Email::Sender>.
 
 =cut
 
 sub send {
-	my $self = shift;
+	my $self = shift()->_self;
 	$self->using(@_) if @_; # Arguments are passed to ->using
 	my $email = $self->email or return undef;
 	$self->mailer->send( $email );
 }
 
 sub _driver {
-	my $self = shift;
+	my $self = shift()->_self;
 	$self->{send_using}->[0];
 }
 
 sub _options {
-	my $self = shift;
+	my $self = shift()->_self;
 	my $options = $#{$self->{send_using}};
 	@{$self->{send_using}}[1 .. $options];
 }
@@ -590,28 +590,23 @@ sub _options {
 =head2 mailer
 
 If you need to interact with it directly, the C<mailer> method
-returns the L<Email::Send> mailer object that will be used to
+returns the L<Email::Sender> mailer object that will be used to
 send the email.
 
-Returns an L<Email::Send> object, or dies if the driver is not
-available.
+Returns an L<Email::Sender::Transport> object, or dies if the driver
+is not available.
 
 =cut
 
+my $MAILER;
 sub mailer { 
-	my $self = shift;
-	return $self->{mailer} if $self->{mailer};
+  my $self = shift;
+  my $mailer = ref $self ? $self->{mailer} : $MAILER;
+  return $mailer if $mailer;
 
 	my $driver = $self->_driver;
-	$self->{mailer} = Email::Send->new( {
-		mailer      => $driver,
-		mailer_args => [ $self->_options ],
-		} );
-	unless ( $self->{mailer}->mailer_available($driver, $self->_options) ) {
-		Carp::croak("Driver $driver is not available");
-	}
-
-	$self->{mailer};
+	$mailer = Email::Sender::Simple->default_transport;
+	$mailer;
 }
 
 
@@ -654,9 +649,14 @@ B<Current maintainer>: Ricardo Signes C<rjbs@cpan.org>
 
 Adam Kennedy E<lt>adamk@cpan.orgE<gt>
 
+=head1 CONTRIBUTORS
+
+Shadowcat Systems kindly sponsored Chris Nehren to port this module to
+Email::Sender.
+
 =head1 SEE ALSO
 
-L<Email::MIME>, L<Email::Send>, L<http://ali.as/>
+L<Email::MIME>, L<Email::Sender>, L<http://ali.as/>
 
 =head1 COPYRIGHT
 

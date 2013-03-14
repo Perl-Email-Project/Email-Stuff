@@ -24,7 +24,8 @@ use Email::Stuff;
 # Single Part tests
 
 # Single part text/plain
-use Email::Send::Test ();
+use Email::Sender::Transport::Test ();
+$ENV{EMAIL_SENDER_TRANSPORT} = 'Test';
 my $rv = Email::Stuff->from       ( 'Adam Kennedy<adam@phase-n.com>')
                      ->to         ( 'adam@phase-n.com'              )
                      ->subject    ( 'Hello To:!'                    )
@@ -32,8 +33,8 @@ my $rv = Email::Stuff->from       ( 'Adam Kennedy<adam@phase-n.com>')
                      ->using      ( 'Test'                          )
                      ->send;
 ok( $rv, 'Email sent ok' );
-is( scalar(Email::Send::Test->emails), 1, 'Sent one email' );
-my $email = (Email::Send::Test->emails)[0]->as_string;
+is( scalar @{Email::Stuff->mailer->deliveries}, 1, 'Sent one email' );
+my $email = Email::Stuff->mailer->deliveries->[0]{email}->as_string;
 
 like( $email, qr/Adam Kennedy/,  'Email contains from name' );
 like( $email, qr/phase-n/,       'Email contains to string' );
@@ -41,14 +42,13 @@ like( $email, qr/Hello/,         'Email contains subject string' );
 like( $email, qr/Content-Type: text\/plain/,   'Email content type' );
 
 like(
-  (Email::Send::Test->emails)[0]->body_str,
+  Email::Stuff->mailer->deliveries->[0]{email}->object->body_str,
   qr/I am an emáil/,
   'Email contains text_body'
 );
 
 
 # Single part html/text
-use Email::Send::Test ();
 my $rv2 = Email::Stuff->from       ( 'Adam Kennedy<adam@phase-n.com>')
                       ->to         ( 'adam@phase-n.com'              )
                       ->subject    ( 'Hello To:!'                    )
@@ -56,8 +56,8 @@ my $rv2 = Email::Stuff->from       ( 'Adam Kennedy<adam@phase-n.com>')
                       ->using      ( 'Test'                          )
                       ->send;
 ok( $rv2, 'Email sent ok' );
-is( scalar(Email::Send::Test->emails), 2, 'Sent another email' );
-$email = (Email::Send::Test->emails)[1]->as_string;
+is( scalar @{Email::Stuff->mailer->deliveries}, 2, 'Sent another email' );
+$email = Email::Stuff->mailer->deliveries->[1]{email}->as_string;
 
 like( $email, qr/Adam Kennedy/,  'Email contains from name' );
 like( $email, qr/phase-n/,       'Email contains to string' );

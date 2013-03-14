@@ -23,7 +23,8 @@ use Email::Stuff;
 #####################################################################
 # Multipart/Alternate tests
 
-use Email::Send::Test ();
+use Email::Sender::Transport::Test ();
+$ENV{EMAIL_SENDER_TRANSPORT} = 'Test';
 my $rv = Email::Stuff->from       ( 'Adam Kennedy<adam@phase-n.com>')
                      ->to         ( 'adam@phase-n.com'              )
                      ->subject    ( 'Hello To:!'                    )
@@ -32,8 +33,8 @@ my $rv = Email::Stuff->from       ( 'Adam Kennedy<adam@phase-n.com>')
                      ->using      ( 'Test'                          )
                      ->send;
 ok( $rv, 'Email sent ok' );
-is( scalar(Email::Send::Test->emails), 1, 'Sent one email' );
-my $email  = (Email::Send::Test->emails)[0];
+is( scalar @{Email::Stuff->mailer->deliveries}, 1, 'Sent one email' );
+my $email = Email::Stuff->mailer->deliveries->[0]{email};
 my $string = $email->as_string;
 
 like( $string, qr/Adam Kennedy/,  'Email contains from name' );
@@ -43,7 +44,7 @@ like( $string, qr/Content-Type: multipart\/alternative/,   'Email content type' 
 like( $string, qr/Content-Type: text\/plain/,   'Email content type' );
 like( $string, qr/Content-Type: text\/html/,   'Email content type' );
 
-like( ($email->subparts)[0]->body_str, qr/I am an emáil/, 'Email contains text_body' );
-like( ($email->subparts)[1]->body_str, qr/<b>I am a html emáil<\/b>/, 'Email contains text_body' );
+like( ($email->object->subparts)[0]->body_str, qr/I am an emáil/, 'Email contains text_body' );
+like( ($email->object->subparts)[1]->body_str, qr/<b>I am a html emáil<\/b>/, 'Email contains text_body' );
 
 1;
