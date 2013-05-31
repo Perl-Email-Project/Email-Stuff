@@ -4,6 +4,33 @@ package Email::Stuff;
 
 Email::Stuff - A more casual approach to creating and sending Email:: emails
 
+=head1 ACHTUNG!
+
+B<Email::Stuff is deprecated in favor of L<Email::Stuffer>.>
+
+Email::Stuffer should be a drop-in replacement for almost all users.  It uses
+L<Email::Sender> in place of L<Email::Send>.  This won't usually cause a
+noticeable change, but will be a lot easier to test.
+
+You will need to be careful if:
+
+=over
+
+=item *
+
+you use the C<using> or C<mailer> methods, which are replaced by C<transport>
+in Stuffer
+
+=item *
+
+you inspect the false Return::Value object provided by Stuff in case of failure
+
+=item *
+
+you pass extra arguments to the C<send> method
+
+=back
+
 =head1 SYNOPSIS
 
   # Prepare the message
@@ -171,7 +198,7 @@ use prefork 'File::Type';
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '2.102';
+	$VERSION = '2.103';
 }
 
 #####################################################################

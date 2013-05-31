@@ -1,5 +1,8 @@
 Revision history for Perl extension Email::Stuff
 
+2.103     2013-05-30
+          note deprecation in favor of Email::Stuffer
+
 2.102     2010-02-14
           minor documentation improvements
           do not break chaining on $stuff->FOO_text(undef);
