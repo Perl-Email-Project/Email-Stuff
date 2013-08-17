@@ -38,22 +38,19 @@ you pass extra arguments to the C<send> method
   Dear Santa
   
   I have killed Bun Bun.
-  
-  Yes, I know what you are thinking... but it was actually a total accident.
-  
-  I was in a crowded line at a BayWatch signing, and I tripped, and stood on his head.
-  
+  Yes, I know what you are thinking... but it was actually a total accident.  I
+  was in a crowded line at a BayWatch signing, and I tripped, and stood on his
+  head.
   I know. Oops! :/
-  
-  So anyways, I am willing to sell you the body for $1 million dollars.
-  
-  Be near the pinhole to the Dimension of Pain at midnight.
-  
+
+  So anyways, I am willing to sell you the body for $1 million dollars.  Be
+  near the pinhole to the Dimension of Pain at midnight.
+
   Alias
-  
+
   AMBUSH_READY
-  
-  # Create and send the email in one shot
+
+  # Create and send the email in one shot, and send via sendmail
   Email::Stuff->from     ('cpan@ali.as'                      )
               ->to       ('santa@northpole.org'              )
               ->bcc      ('bunbun@sluggy.com'                )
@@ -61,6 +58,15 @@ you pass extra arguments to the C<send> method
               ->attach   (io('dead_bunbun_faked.gif')->all,
                           filename => 'dead_bunbun_proof.gif')
               ->send;
+
+   # Construct email before sending and send with SMTP.
+
+   my $mail = Email::Stuff->from('cpan@ali.as');
+   $mail->to('santa@northpole.org')
+   # and so on ...
+   my $mailer = Email::Send->new({mailer => 'SMTP'});
+   $mailer->mailer_args([Host => 'smtp.example.com:465', ssl => 1]);
+   $mail->send($mailer);
 
 =head1 DESCRIPTION
 
@@ -84,9 +90,10 @@ to do things properly.
 
 =head2 Default Mailer
 
-Although it cannot be relied upon to work, the default behaviour is to use
-sendmail to send mail, if you don't provide the mail send channel with
-either the C<using> method, or as an argument to C<send>.
+Email::Stuff uses L<Email::Send> to send messages.  Although it cannot be
+relied upon to work, the default behaviour is to use sendmail to send mail, if
+you don't provide the mail send channel with either the C<using> method, or as
+an argument to C<send>.
 
 The use of sendmail as the default mailer is consistent with the behaviour
 of the L<Email::Send> module itself.
@@ -198,7 +205,7 @@ use prefork 'File::Type';
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '2.103';
+	$VERSION = '2.104';
 }
 
 #####################################################################
@@ -592,7 +599,8 @@ sub as_string {
 
 =head2 send
 
-Sends the email via L<Email::Send>.
+Sends the email via L<Email::Send>.  Optionally pass in a Mail:Send object to
+override the default mailer.
 
 =cut
 
@@ -671,9 +679,9 @@ sub Email   { shift->email(@_)   }
 
 =head1 SUPPORT
 
-All bugs should be filed via the CPAN bug tracker at
+All bugs should be filed via the bug tracker at
 
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Email-Stuff>
+L<https://github.com/rjbs/Email-Stuff/issues>
 
 =head1 AUTHORS
 

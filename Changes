@@ -1,5 +1,8 @@
 Revision history for Perl extension Email::Stuff
 
+2.104     2013-08-16
+          Documentation improvements (kd).
+
 2.103     2013-05-30
           note deprecation in favor of Email::Stuffer
 
