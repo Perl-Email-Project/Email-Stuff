@@ -225,6 +225,7 @@ sub new {
 		# mailer   => undef,
 		parts      => [],
 		email      => Email::MIME->create(
+            attributes => { 'charset' => 'utf-8' },
 			header => [],
 			parts  => [],
 			),
@@ -434,7 +435,7 @@ sub attach {
 
 	# Determine the slot to put it at
 	my $slot = scalar @{$self->{parts}};
-	$slot = 3 if $slot < 3;
+	$slot = 2 if $slot < 2;
 
 	# Create the part in the attachment slot
 	$self->{parts}->[$slot] = Email::MIME->create(
@@ -536,28 +537,37 @@ Creates and returns the full L<Email::MIME> object for the email.
 
 sub email {
 	my $self  = shift;
-	my @parts = $self->parts;
+    my ($text, $html, @parts) = @{ $self->{parts} };
 
-        ### Lyle Hopkins, code added to Fix single part, and multipart/alternative problems
-        if ( scalar( @{ $self->{parts} } ) >= 3 ) {
-                ## multipart/mixed
-                $self->{email}->parts_set( \@parts );
-        }
-        ## Check we actually have any parts
-        elsif ( scalar( @{ $self->{parts} } ) ) {
-                if ( _INSTANCE($parts[0], 'Email::MIME') && _INSTANCE($parts[1], 'Email::MIME') ) {
-                        ## multipart/alternate
-                        $self->{email}->header_set( 'Content-Type' => 'multipart/alternative' );
-                        $self->{email}->parts_set( \@parts );
-                }
-                ## As @parts is $self->parts without the blanks, we only need check $parts[0]
-                elsif ( _INSTANCE($parts[0], 'Email::MIME') ) {
-                        ## single part text/plain
-                        _transfer_headers( $self->{email}, $parts[0] );
-                        $self->{email} = $parts[0];
-                }
-        }
+    if ( _INSTANCE($text, 'Email::MIME') && _INSTANCE($html, 'Email::MIME') ) {
 
+        # if we have extra parts, nest a multipart/alt inside a multipart/mixed MIME
+        if (scalar @parts) {
+
+            ## multipart/alternative with attachments
+            my $mp_alt = Email::MIME->create(
+                header => ['Content-Type' => 'multipart/alternative' ],
+                parts  => [ $text, $html ],
+            );
+
+            $self->{email}->parts_set( [ $mp_alt, @parts ] );
+        } else {
+
+            ## multipart/alternative
+            $self->{email}->header_set( 'Content-Type' => 'multipart/alternative' );
+            $self->{email}->parts_set( [ $text, $html ] );
+        }
+    }
+    ## As @parts is $self->parts without the blanks, we only need check $parts[0]
+    elsif ( _INSTANCE($text, 'Email::MIME') ) {
+
+            # note @parts will collapse if empty
+            $self->{email}->parts_set( [ $text, @parts ] );
+    }
+    elsif ( _INSTANCE($html, 'Email::MIME') ) {
+
+            $self->{email}->parts_set( [ $html, @parts ] );
+    }
 	$self->{email};
 }
 
