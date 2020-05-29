@@ -1,5 +1,7 @@
 Revision history for Perl extension Email::Stuff
 
+          Add x_deprecated metadata, and notice to abstract.
+
 2.104     2013-08-16
           Documentation improvements (kd).
 

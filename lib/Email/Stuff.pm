@@ -2,7 +2,7 @@ package Email::Stuff;
 
 =head1 NAME
 
-Email::Stuff - A more casual approach to creating and sending Email:: emails
+Email::Stuff - (DEPRECATED) A more casual approach to creating and sending Email:: emails
 
 =head1 ACHTUNG!
 
